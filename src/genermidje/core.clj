@@ -2,19 +2,27 @@
   (:require [midje.sweet :refer :all]))
 
 
+(defn fulfil
+  [seed]
+  (fn [element]
+    (cond
+     (seq? element) (map (fulfil seed) element)
+     :else (or (seed element) element))))
+
+
 (defmacro generate-fact
   [seeds & template]
   (let [s (first seeds)]
     `(fact ""
-           ~@(map (fn [e] (or (s e) e)) template))))
+           ~@(map (fulfil s) template))))
 
 
 (defmacro generate-facts
-  [seeds & template]
+  [name seeds & template]
   `(fact-group
-    ""
+    ~name
     ~@(map
        (fn [s]
-         `(fact ""
-                ~@(map (fn [e] (or (s e) e)) template)))
+         `(fact ~(or (:.name s) "")
+                ~@(map (fulfil s) template)))
        seeds)))
