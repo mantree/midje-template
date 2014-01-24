@@ -6,16 +6,20 @@
   [seed]
   (fn [element]
     (cond
+     (map? element) (zipmap (map (fulfil seed) (keys element)) (map (fulfil seed) (vals element)))
      (seq? element) (map (fulfil seed) element)
      :else (or (seed element) element))))
 
 
-(defmacro generate-fact
-  [seeds & template]
-  (let [s (first seeds)]
-    `(fact ""
-           ~@(map (fulfil s) template))))
+(defn build-fact
+  [seed template]
+  `(fact ""
+         ~@(map (fulfil seed) template)))
 
+
+(defmacro generate-fact
+  [seed & template]
+  (build-fact seed template))
 
 (defmacro generate-facts
   [name seeds & template]
@@ -23,6 +27,5 @@
     ~name
     ~@(map
        (fn [s]
-         `(fact ~(or (:.name s) "")
-                ~@(map (fulfil s) template)))
+         (build-fact s template))
        seeds)))

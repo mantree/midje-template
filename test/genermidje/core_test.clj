@@ -5,7 +5,7 @@
 
 (fact "Single template"
       (macroexpand-1 '(generate-fact
-                       [{:.key "foo"}]
+                       {:.key "foo"}
                        :.key => "foo"))
       =>
       '(midje.sweet/fact ""
@@ -13,22 +13,32 @@
 
 (fact "Single template with nested key"
       (macroexpand-1 '(generate-fact
-                       [{:.key "foo"}]
+                       {:.key "foo"}
                        (identity :.key) => "foo"))
       =>
       '(midje.sweet/fact ""
                          (identity "foo") => "foo"))
 
+(fact "Single template with mapped key"
+      (macroexpand-1 '(generate-fact
+                       {:.key "foo"
+                        :.value "bar"}
+                       {:.key :.value} => {"foo" "bar"}))
+      =>
+      '(midje.sweet/fact ""
+                          {"foo" "bar"} => {"foo" "bar"}))
+
 
 (fact "Multi templates"
       (macroexpand-1 '(generate-facts
+                       "Facts"
                        [{:.key "foo"}
                         {:.key "bar"}
                         {:.key "baz"}]
                        :.key => "foo"))
       =>
       '(midje.sweet/fact-group
-        ""
+        "Facts"
         (midje.sweet/fact ""
                            "foo" => "foo")
         (midje.sweet/fact ""
@@ -55,7 +65,7 @@
                           (identity "baz") => "foo")))
 
 (generate-fact
- [{:.key "foo"}]
+ {:.key "foo"}
  :.key => "foo")
 
 (generate-facts
