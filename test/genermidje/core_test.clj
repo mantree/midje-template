@@ -70,7 +70,6 @@
       '(midje.sweet/fact ""
                          (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
 
-
 (fact "Multi templates"
       (macroexpand-1 '(generate-facts
                        "Facts"
@@ -106,6 +105,23 @@
         (midje.sweet/fact ""
                           (identity "baz") => "foo")))
 
+(fact "Optional templating"
+      (macroexpand-1 '(generate-facts
+                       "Facts"
+                       [{:.key "foo"}
+                        {:.key "bar"
+                         :.option ("baz" => "baz")}]
+                       :.key => "foo"
+                       :.option))
+      =>
+      '(midje.sweet/fact-group
+        "Facts"
+        (midje.sweet/fact ""
+                          "foo" => "foo")
+        (midje.sweet/fact ""
+                          "bar" => "foo"
+                          ("baz" => "baz"))))
+
 (generate-fact
  {:.key "foo"}
  :.key => "foo")
@@ -123,3 +139,11 @@
  {:.key :.val
   :.val "foo"}
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
+
+(generate-facts
+ "Facts"
+ [{:.key "foo"}
+  {:.key "bar"
+   :.option ("baz" => "baz")}]
+ :.key => "foo"
+ :.option)

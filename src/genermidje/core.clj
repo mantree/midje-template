@@ -2,6 +2,11 @@
   (:require [midje.sweet :refer :all]))
 
 
+(defn template-key?
+  [element]
+  (when (keyword? element)
+    (= (first ".") (first (name element)))))
+
 (defn fulfil
   [seed]
   (fn [element]
@@ -17,7 +22,7 @@
   [seed template]
   (let [fulfiled-seed (zipmap (keys seed) (map (fulfil seed) (vals seed)))]
     `(fact ~(or (:.name fulfiled-seed) "")
-           ~@(map (fulfil fulfiled-seed) template))))
+           ~@(remove template-key? (map (fulfil fulfiled-seed) template)))))
 
 
 (defmacro generate-fact
