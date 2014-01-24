@@ -26,7 +26,31 @@
                        {:.key :.value} => {"foo" "bar"}))
       =>
       '(midje.sweet/fact ""
-                          {"foo" "bar"} => {"foo" "bar"}))
+                         {"foo" "bar"} => {"foo" "bar"}))
+
+(fact "Key map in a threaded structure"
+      (macroexpand-1 '(generate-fact
+                       {:.key "foo"}
+                       (-> {:.key "bar"} (get :.key)) => "bar"))
+      =>
+      '(midje.sweet/fact ""
+                         (-> {"foo" "bar"} (get "foo")) => "bar"))
+
+(fact "Key in a let"
+      (macroexpand-1 '(generate-fact
+                       {:.key "foo"}
+                       (let [fiz :.key] fiz) => "foo"))
+      =>
+      '(midje.sweet/fact ""
+                         (let [fiz "foo"] fiz) => "foo"))
+
+(fact "Key map in a threaded structure in a let"
+      (macroexpand-1 '(generate-fact
+                       {:.key "foo"}
+                       (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
+      =>
+      '(midje.sweet/fact ""
+                         (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
 
 
 (fact "Multi templates"
@@ -72,3 +96,7 @@
  "fact group"
  [{:.key "foo"}]
  :.key => "foo")
+
+(generate-fact
+ {:.key "foo"}
+ (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
