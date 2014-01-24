@@ -11,6 +11,15 @@
       '(midje.sweet/fact ""
                          "foo" => "foo"))
 
+(fact "Single named template"
+      (macroexpand-1 '(generate-fact
+                       {:.name "name"
+                        :.key "foo"}
+                       :.key => "foo"))
+      =>
+      '(midje.sweet/fact "name"
+                         "foo" => "foo"))
+
 (fact "Single template with nested key"
       (macroexpand-1 '(generate-fact
                        {:.key "foo"}

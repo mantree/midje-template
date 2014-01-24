@@ -16,7 +16,7 @@
 (defn build-fact
   [seed template]
   (let [fulfiled-seed (zipmap (keys seed) (map (fulfil seed) (vals seed)))]
-    `(fact ""
+    `(fact ~(or (:.name fulfiled-seed) "")
            ~@(map (fulfil fulfiled-seed) template))))
 
 
