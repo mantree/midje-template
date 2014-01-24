@@ -7,9 +7,9 @@
   (fn [element]
     (cond
      (map? element) (zipmap (map (fulfil seed) (keys element)) (map (fulfil seed) (vals element)))
-     (list? element) (map (fulfil seed) element)
      (vector? element) (vec (map (fulfil seed) element))
      (set? element) (set (map (fulfil seed) element))
+     (seq? element) (map (fulfil seed) element)
      :else (or (seed element) element))))
 
 
