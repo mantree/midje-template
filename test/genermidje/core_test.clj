@@ -52,6 +52,15 @@
       '(midje.sweet/fact ""
                          (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
 
+(fact "Fulfils templated keys in seeds"
+      (macroexpand-1 '(generate-fact
+                       {:.key :.val
+                        :.val "foo"}
+                       (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
+      =>
+      '(midje.sweet/fact ""
+                         (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
+
 
 (fact "Multi templates"
       (macroexpand-1 '(generate-facts
@@ -99,4 +108,9 @@
 
 (generate-fact
  {:.key "foo"}
+ (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
+
+(generate-fact
+ {:.key :.val
+  :.val "foo"}
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")

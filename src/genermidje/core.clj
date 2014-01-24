@@ -15,8 +15,9 @@
 
 (defn build-fact
   [seed template]
-  `(fact ""
-         ~@(map (fulfil seed) template)))
+  (let [fulfiled-seed (zipmap (keys seed) (map (fulfil seed) (vals seed)))]
+    `(fact ""
+           ~@(map (fulfil fulfiled-seed) template))))
 
 
 (defmacro generate-fact
