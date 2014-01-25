@@ -7,33 +7,34 @@
   (when (keyword? element)
     (= (first ".") (first (name element)))))
 
-(defn fulfil
-  [seed]
-  (fn [element]
-    (cond
-     (map? element) (zipmap (map (fulfil seed) (keys element)) (map (fulfil seed) (vals element)))
-     (vector? element) (vec (map (fulfil seed) element))
-     (set? element) (set (map (fulfil seed) element))
-     (seq? element) (map (fulfil seed) element)
-     :else (or (seed element) element))))
+(defn fill-in-with
+  [filling]
+  (let [fufill (partial map (fn [x] (@(delay (fill-in-with filling)) x)))]
+    (fn [element]
+      (cond
+       (map? element) (zipmap (fufill (keys element)) (fufill (vals element)))
+       (vector? element) (vec (fufill element))
+       (set? element) (set (fufill element))
+       (seq? element) (fufill element)
+       :else (or (filling element) element)))))
 
 
 (defn build-fact
-  [seed template]
-  (let [fulfiled-seed (zipmap (keys seed) (map (fulfil seed) (vals seed)))]
-    `(fact ~(or (:.name fulfiled-seed) "")
-           ~@(remove template-key? (map (fulfil fulfiled-seed) template)))))
+  [filling template]
+  (let [self-filled (zipmap (keys filling) (map (fill-in-with filling) (vals filling)))]
+    `(fact ~(or (:.name self-filled) "")
+           ~@(remove template-key? (map (fill-in-with self-filled) template)))))
 
 
 (defmacro generate-fact
-  [seed & template]
-  (build-fact seed template))
+  [filling & template]
+  (build-fact filling template))
 
 (defmacro generate-facts
-  [name seeds & template]
+  [name fillings & template]
   `(fact-group
     ~name
     ~@(map
-       (fn [s]
-         (build-fact s template))
-       seeds)))
+       (fn [f]
+         (build-fact f template))
+       fillings)))
