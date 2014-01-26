@@ -109,7 +109,7 @@
       (macroexpand-1 '(generate-facts
                        "Facts"
                        [{:.key "foo"}
-                        {:.key "bar"
+                        {:.key "foo"
                          :.option ("baz" => "baz")}]
                        :.key => "foo"
                        :.option))
@@ -119,8 +119,8 @@
         (midje.sweet/fact ""
                           "foo" => "foo")
         (midje.sweet/fact ""
-                          "bar" => "foo"
-                          ("baz" => "baz"))))
+                          "foo" => "foo"
+                          "baz" => "baz")))
 
 (generate-fact
  {:.key "foo"}
@@ -141,9 +141,9 @@
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
 
 (generate-facts
- "Facts"
- [{:.key "foo"}
-  {:.key "bar"
-   :.option ("baz" => "baz")}]
- :.key => "foo"
- :.option)
+  "Facts"
+  [{:.key "foo"}
+   {:.key "foo"
+    :.option ("baz" => "baz")}]
+  :.key => "foo"
+  :.option)
