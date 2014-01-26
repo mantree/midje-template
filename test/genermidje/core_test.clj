@@ -4,7 +4,7 @@
 
 
 (fact "Single template"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"}
                        :.key => "foo"))
       =>
@@ -12,7 +12,7 @@
                          "foo" => "foo"))
 
 (fact "Single named template"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.name "name"
                         :.key "foo"}
                        :.key => "foo"))
@@ -21,7 +21,7 @@
                          "foo" => "foo"))
 
 (fact "Single template with nested key"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"}
                        (identity :.key) => "foo"))
       =>
@@ -29,7 +29,7 @@
                          (identity "foo") => "foo"))
 
 (fact "Single template with mapped key"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"
                         :.value "bar"}
                        {:.key :.value} => {"foo" "bar"}))
@@ -38,7 +38,7 @@
                          {"foo" "bar"} => {"foo" "bar"}))
 
 (fact "Key map in a threaded structure"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"}
                        (-> {:.key "bar"} (get :.key)) => "bar"))
       =>
@@ -46,7 +46,7 @@
                          (-> {"foo" "bar"} (get "foo")) => "bar"))
 
 (fact "Key in a let"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"}
                        (let [fiz :.key] fiz) => "foo"))
       =>
@@ -54,7 +54,7 @@
                          (let [fiz "foo"] fiz) => "foo"))
 
 (fact "Key map in a threaded structure in a let"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key "foo"}
                        (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
       =>
@@ -62,7 +62,7 @@
                          (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
 
 (fact "Fulfils templated keys in seeds"
-      (macroexpand-1 '(generate-fact
+      (macroexpand-1 '(template-fact
                        {:.key :.val
                         :.val "foo"}
                        (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
@@ -71,7 +71,7 @@
                          (let [fiz (-> {"foo" "bar"} (get "foo"))] fiz) => "bar"))
 
 (fact "Multi templates"
-      (macroexpand-1 '(generate-facts
+      (macroexpand-1 '(template-facts
                        "Facts"
                        [{:.key "foo"}
                         {:.key "bar"}
@@ -89,7 +89,7 @@
 
 
 (fact "Multi templates with nested call"
-      (macroexpand-1 '(generate-facts
+      (macroexpand-1 '(template-facts
                        "fact group"
                        [{:.key "foo"}
                         {:.key "bar"}
@@ -106,7 +106,7 @@
                           (identity "baz") => "foo")))
 
 (fact "Optional templating"
-      (macroexpand-1 '(generate-facts
+      (macroexpand-1 '(template-facts
                        "Facts"
                        [{:.key "foo"}
                         {:.key "foo"
@@ -122,25 +122,25 @@
                           "foo" => "foo"
                           "baz" => "baz")))
 
-(generate-fact
+(template-fact
  {:.key "foo"}
  :.key => "foo")
 
-(generate-facts
+(template-facts
  "fact group"
  [{:.key "foo"}]
  :.key => "foo")
 
-(generate-fact
+(template-fact
  {:.key "foo"}
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
 
-(generate-fact
+(template-fact
  {:.key :.val
   :.val "foo"}
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
 
-(generate-facts
+(template-facts
   "Facts"
   [{:.key "foo"}
    {:.key "foo"

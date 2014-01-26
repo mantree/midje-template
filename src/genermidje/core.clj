@@ -52,11 +52,11 @@
               remove-unused-options))))
 
 
-(defmacro generate-fact
+(defmacro template-fact
   [filling & template]
   (build-fact filling template))
 
-(defmacro generate-facts
+(defmacro template-facts
   [name fillings & template]
   `(fact-group
     ~name
