@@ -122,6 +122,28 @@
                           "foo" => "foo"
                           "baz" => "baz")))
 
+(fact "Condensed example of all features"
+      (macroexpand-1 '(template-facts
+                       "condensed feature example"
+                       [{:.name "show fillings are filled"
+                         :.val :.indirect-val
+                         :.indirect-val "foo"}
+                        {:.name "show optional checkers"
+                         :.val "foo"
+                         :.option ("baz" => "baz")}]
+                 (let [v (:key {:key :.val})]
+                       v => "foo"
+                       :.option)))
+      =>
+      '(midje.sweet/fact-group "condensed feature example"
+         (midje.sweet/fact "show fillings are filled"
+           (let [v (:key {:key "foo"})]
+             v => "foo"))
+         (midje.sweet/fact "show optional checkers"
+           (let [v (:key {:key "foo"})]
+             v => "foo"
+             "baz" => "baz"))))
+
 (template-fact
  {:.key "foo"}
  :.key => "foo")
@@ -131,19 +153,45 @@
  [{:.key "foo"}]
  :.key => "foo")
 
-(template-fact
+(macroexpand-1 '(template-fact
  {:.key "foo"}
- (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
+ (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
 
 (template-fact
  {:.key :.val
   :.val "foo"}
  (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar")
 
-(template-facts
+(macroexpand-1 '(template-facts
   "Facts"
   [{:.key "foo"}
    {:.key "foo"
     :.option ("baz" => "baz")}]
   :.key => "foo"
-  :.option)
+  :.option))
+
+      (macroexpand-1 '(template-fact
+                       {:.key :.val
+                        :.val "foo"}
+                       (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
+
+  (macroexpand-1 '(template-facts
+                       "Facts"
+                       [{:.key "foo"}
+                        {:.key "foo"
+                         :.option ("baz" => "baz")}]
+                       :.key => "foo"
+                       :.option))
+
+(macroexpand-1 '(template-facts
+                       "Show all the features"
+                       [{:.name "show fillings are filled"
+                         :.val :.indirect-val
+                         :.indirect-val "foo"}
+                        {:.name "show optional checkers"
+                         :.val "foo"
+                         :.option ("baz" => "baz")}]
+                 (let [v (:key {:key :.val})]
+                       v => "foo"
+                       :.option)))
+

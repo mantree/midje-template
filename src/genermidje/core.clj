@@ -9,9 +9,17 @@
   (when (keyword? element)
     (= (first ".") (first (name element)))))
 
+
 (defn remove-unused-options
   [filled-template]
-  (remove template-key? filled-template))
+  (->>
+  (map
+   (fn [element]
+     (if (seq? element)
+       (remove-unused-options element)
+       element))
+   filled-template)
+   (remove template-key?)))
 
 (defn assertion?
   [f]
@@ -22,8 +30,13 @@
 
 
 (defn resolve-optional-assertions
-  [filled-template]
-  (mapcat #(if (assertion? %) % (list %))
+  [checkers filled-template]
+  (mapcat #(
+            if (seq? %)
+             (list (resolve-optional-assertions checkers %))
+             (if (template-key? %)
+               (% checkers)
+               (list %)))
           filled-template))
 
 
@@ -42,13 +55,25 @@
   [self-filled template]
   (map (fill-in-with self-filled) template))
 
+(defn split-out-checkers
+  [self-filled]
+  (reduce
+    (fn [[sf checkers] tar]
+      (if (assertion? (val tar))
+        [sf (assoc checkers (key tar) (val tar))]
+        [(assoc sf (key tar) (val tar)) checkers]))
+   [{} {}]
+   self-filled))
+
+
 (defn build-fact
   [filling template]
-  (let [self-filled (zipmap (keys filling) (map (fill-in-with filling) (vals filling)))]
+  (let [self-filled (zipmap (keys filling) (map (fill-in-with filling) (vals filling)))
+        [standard-fillings checkers] (split-out-checkers self-filled)]
     `(fact ~(or (:.name self-filled) "")
            ~@(->>
-              (fill-in-template self-filled template)
-              resolve-optional-assertions
+              (fill-in-template standard-fillings template)
+              (resolve-optional-assertions checkers)
               remove-unused-options))))
 
 
