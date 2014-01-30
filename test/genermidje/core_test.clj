@@ -148,9 +148,15 @@
  {:.key "foo"}
  :.key => "foo")
 
+(macroexpand-1 '(template-fact
+                       {:.check ("foo" => "foo")}
+                       :.check))
+
+
 (template-facts
  "fact group"
- [{:.key "foo"}]
+ [{:.key "foo"}
+  {:.key "bar"}]
  :.key => "foo")
 
 (macroexpand-1 '(template-fact
@@ -195,3 +201,7 @@
                        v => "foo"
                        :.option)))
 
+(macroexpand-1 '(template-fact
+                       {:.map {"foo" :.val}
+                        :.val "bar"}
+                       (let [fiz (-> :.map (get "foo"))] fiz) => "bar"))
