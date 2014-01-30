@@ -28,6 +28,19 @@ Create midje fact groups by defining a template and a sequence of fillings.
              "baz" => "baz"))))
 ```
 
+Import from [clojars](https://clojars.org/rest-cljer) with:
+
+```clj
+[midje-template "0.2.0"]
+```
+
+then add to project.clj
+
+```clj
+:profiles {:dev {:dependencies [[midje-template "0.2.0"]]}}
+```
+
+
 ## Concept
 
 Often tests can become very repetative, most times you can get by with tabular midje definitions, but sometimes you need something that's a bit more flexiable. It for those times that midje-template is made for.
