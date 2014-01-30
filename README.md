@@ -130,7 +130,7 @@ That's pretty much all it does for now, check the tests for more. Enjoy!
 
 ## Is this a good idea?
 
-I'm not completed sure to be honest :) It is easy to see how this could be horribly misused and result in test stuites that are far harder to read than if they had all just been written out long hand.
+I'm not completely sure to be honest :) It is easy to see how this could be horribly misused, resulting in test suites that are far harder to read than if they had just been written out long hand.
 
 However, I *think* with careful thought and a little restraint there are scenarios where it could bring real benefits. Only time and a little experimentation will tell.
 
