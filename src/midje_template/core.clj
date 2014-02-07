@@ -67,19 +67,18 @@
 
 
 (defn build-fact
-  [filling template]
+  [group-name filling template]
   (let [self-filled (zipmap (keys filling) (map (fill-in-with filling) (vals filling)))
         [standard-fillings checkers] (split-out-checkers self-filled)]
-    `(fact ~(or (:.name self-filled) "")
+    `(fact ~(apply str (interpose " " (remove nil? [group-name (:.name self-filled)])))
            ~@(->>
               (fill-in-template standard-fillings template)
               (resolve-optional-assertions checkers)
               remove-unused-options))))
 
-
 (defmacro template-fact
   [filling & template]
-  (build-fact filling template))
+  (build-fact nil filling template))
 
 (defmacro template-facts
   [name fillings & template]
@@ -87,5 +86,5 @@
     ~name
     ~@(map
        (fn [f]
-         (build-fact f template))
+         (build-fact name f template))
        fillings)))

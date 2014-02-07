@@ -80,11 +80,11 @@
       =>
       '(midje.sweet/fact-group
         "Facts"
-        (midje.sweet/fact ""
+        (midje.sweet/fact "Facts"
                            "foo" => "foo")
-        (midje.sweet/fact ""
+        (midje.sweet/fact "Facts"
                            "bar" => "foo")
-        (midje.sweet/fact ""
+        (midje.sweet/fact "Facts"
                           "baz" => "foo")))
 
 
@@ -98,11 +98,11 @@
       =>
       '(midje.sweet/fact-group
         "fact group"
-        (midje.sweet/fact ""
+        (midje.sweet/fact "fact group"
                           (identity "foo") => "foo")
-        (midje.sweet/fact ""
+        (midje.sweet/fact "fact group"
                           (identity "bar") => "foo")
-        (midje.sweet/fact ""
+        (midje.sweet/fact "fact group"
                           (identity "baz") => "foo")))
 
 (fact "Optional templating"
@@ -116,9 +116,9 @@
       =>
       '(midje.sweet/fact-group
         "Facts"
-        (midje.sweet/fact ""
+        (midje.sweet/fact "Facts"
                           "foo" => "foo")
-        (midje.sweet/fact ""
+        (midje.sweet/fact "Facts"
                           "foo" => "foo"
                           "baz" => "baz")))
 
@@ -136,10 +136,10 @@
                        :.option)))
       =>
       '(midje.sweet/fact-group "condensed feature example"
-         (midje.sweet/fact "show fillings are filled"
+         (midje.sweet/fact "condensed feature example show fillings are filled"
            (let [v (:key {:key "foo"})]
              v => "foo"))
-         (midje.sweet/fact "show optional checkers"
+         (midje.sweet/fact "condensed feature example show optional checkers"
            (let [v (:key {:key "foo"})]
              v => "foo"
              "baz" => "baz"))))
