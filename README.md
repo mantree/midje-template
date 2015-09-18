@@ -31,7 +31,7 @@ Create midje fact groups by defining a template and a sequence of fillings.
 Import from [clojars](https://clojars.org/rest-cljer) with:
 
 ```clj
-[midje-template "0.2.0"]
+[midje-template "0.4.0"]
 ```
 
 then add to project.clj
