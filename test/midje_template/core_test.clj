@@ -169,30 +169,30 @@
   :.key => "foo"
   :.option))
 
-      (macroexpand-1 '(template-fact
-                       {:.key :.val
-                        :.val "foo"}
-                       (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
-
-  (macroexpand-1 '(template-facts
-                       "Facts"
-                       [{:.key "foo"}
-                        {:.key "foo"
-                         :.option ("baz" => "baz")}]
-                       :.key => "foo"
-                       :.option))
+(macroexpand-1 '(template-fact
+                 {:.key :.val
+                  :.val "foo"}
+                 (let [fiz (-> {:.key "bar"} (get :.key))] fiz) => "bar"))
 
 (macroexpand-1 '(template-facts
-                       "Show all the features"
-                       [{:.name "show fillings are filled"
-                         :.val :.indirect-val
-                         :.indirect-val "foo"}
-                        {:.name "show optional checkers"
-                         :.val "foo"
-                         :.option ("baz" => "baz")}]
+                 "Facts"
+                 [{:.key "foo"}
+                  {:.key "foo"
+                   :.option ("baz" => "baz")}]
+                 :.key => "foo"
+                 :.option))
+
+(macroexpand-1 '(template-facts
+                 "Show all the features"
+                 [{:.name "show fillings are filled"
+                   :.val :.indirect-val
+                   :.indirect-val "foo"}
+                  {:.name "show optional checkers"
+                   :.val "foo"
+                   :.option ("baz" => "baz")}]
                  (let [v (:key {:key :.val})]
-                       v => "foo"
-                       :.option)))
+                   v => "foo"
+                   :.option)))
 
 (macroexpand-1 '(template-fact
                        {:.map {"foo" :.val}
