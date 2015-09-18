@@ -1,4 +1,4 @@
-(defproject midje-template "0.4.0-SNAPSHOT"
+(defproject midje-template "0.4.0"
   :description "Midje fact creation via templates"
   :url "https://github.com/mantree/midje-template"
   :license {:name "Eclipse Public License"
